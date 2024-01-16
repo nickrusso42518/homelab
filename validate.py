@@ -1,16 +1,16 @@
 import asyncio
 import json
+import csv
+import logging
+from io import StringIO
 import ruamel.yaml
 from scrapli.driver.core import AsyncIOSXEDriver
 from scrapli.driver.generic import AsyncGenericDriver
-from io import StringIO
-import csv
-import logging
+
 
 def setup_logger(name, log_file, level=logging.INFO):
-
     handler = logging.FileHandler(log_file)
-    handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
     logger = logging.getLogger(name)
     logger.setLevel(level)
     logger.addHandler(handler)
@@ -18,10 +18,39 @@ def setup_logger(name, log_file, level=logging.INFO):
     return logger
 
 
-async def verify_ios(conn, logger):
+async def check(node, attr):
+    """
+    Coroutine that performs platform/device-specific checks on each node.
+    """
+    driver_map = {
+        "ios": AsyncIOSXEDriver,
+        "esxi": AsyncGenericDriver,
+        "syno": AsyncGenericDriver,
+    }
 
+    verify_map = {
+        "ios": verify_ios,
+        "esxi": verify_esxi,
+        "syno": verify_syno,
+    }
+
+    # Remove and retain the non-scrapli "platform" option
+    platform = attr.pop("platform")
+
+    # Open a new connection with the proper driver and input attrs
+    async with driver_map[platform](**attr) as conn:
+        # Get the prompt and ensure the node name exists inside it
+        prompt = await conn.get_prompt()
+        assert node.lower() in prompt.lower()
+
+        # Perform detailed checks on a given device using conn w/ logging
+        logger = setup_logger(node, f"logs/{node}.txt")
+        await verify_map[platform](conn, logger)
+
+
+async def verify_ios(conn, logger):
     async def _send_cmd_get_lod(cmd):
-        logger.info("SEND > \"%s\"", cmd)
+        logger.info('SEND > "%s"', cmd)
         resp = await conn.send_command(cmd)
         lod = resp.textfsm_parse_output()
         logger.info("REPLY > %s", json.dumps(lod, indent=2))
@@ -45,7 +74,7 @@ async def verify_ios(conn, logger):
     assert len(desired_vlans) == 0
 
     cdp_nbrs = await _send_cmd_get_lod("show cdp neighbors")
-    
+
     # Ensure each desired CDP neighbor is present on the switch
     yaml = ruamel.yaml.YAML()
     with open("desired/cdp_nbrs.yml", "r", encoding="utf-8") as handle:
@@ -73,19 +102,18 @@ async def verify_ios(conn, logger):
     assert defrte[0]["protocol"] == "S"
     assert defrte[0]["nexthop_ip"] == "192.168.1.1"
     assert defrte[0]["nexthop_if"] == "Vlan4001"
-    
+
 
 async def verify_esxi(conn, logger):
-
     async def _send_cmd_get_lod(ns_cmd):
         cmd = f"esxcli --formatter=csv {ns_cmd}"
-        logger.info("SEND > \"%s\"", cmd)
+        logger.info('SEND > "%s"', cmd)
         resp = await conn.send_command(cmd)
         matrix = list(csv.reader(StringIO(resp.result)))
-        lod = [{k: v for k, v in zip(matrix[0], row)} for row in matrix[1:]]
+        # lod = [{k: v for k, v in zip(matrix[0], row)} for row in matrix[1:]]
+        lod = [dict(zip(matrix[0], row)) for row in matrix[1:]]
         logger.info("REPLY > %s", json.dumps(lod, indent=2))
         return lod
-
 
     version = await _send_cmd_get_lod("system version get")
     assert len(version) == 1
@@ -155,51 +183,87 @@ async def verify_esxi(conn, logger):
         assert vswitch["Name"] == vmnic_vswitch_map.pop(i)
     assert len(vmnic_vswitch_map) == 0
 
+
 async def verify_syno(conn, logger):
-    print("syno")
+    async def _send_cmd_get_txt(cmd):
+        logger.info('SEND > "%s"', cmd)
+        resp = await conn.send_command(cmd)
+        logger.info("REPLY > %s", resp.result)
+        return resp.result
 
-DRIVER_MAP = {
-  "ios": AsyncIOSXEDriver,
-  "esxi": AsyncGenericDriver,
-  "syno": AsyncGenericDriver,
-}
+    version = await _send_cmd_get_txt("cat /etc.defaults/VERSION")
+    assert 'productversion="6.2.2"' in version
 
-VERIFY_MAP = {
-  "ios": verify_ios,
-  "esxi": verify_esxi,
-  "syno": verify_syno,
-}
+    intf_ipv4_map = {
+        "eth0": "192.168.2.3/24",
+        "eth1": "192.168.3.3/24",
+    }
+    for intf, ipv4 in intf_ipv4_map.items():
+        net = await _send_cmd_get_txt(f"ip addr show {intf}")
+        assert ipv4 in net
 
-async def check(node, attr):
-    """
-    Coroutine that performs platform/device-specific checks on each node.
-    """
+    defrte = await _send_cmd_get_txt("ip route show 0.0.0.0/0")
+    assert defrte.startswith("default via 192.168.2.254")
 
-    # Remove and retain the non-scrapli "platform" option
-    platform = attr.pop("platform")
+    # Become root for smartctl disk commands
+    sudo = await conn.send_interactive(
+        [
+            ("sudo -i", "Password:", False),
+            (conn.auth_password, "root@", True),
+        ]
+    )
+    assert sudo.result.endswith(":~#")
+    hdd_sn_map = {
+        "sda": "WD-WCC4E4EE6XT9",
+        "sdb": "WD-WCC4E3CP9J1R",
+        "sdc": "WD-WCC4E3ZS9U9F",
+        "sdd": "WD-WCC4E5UJ0HEF",
+    }
+    hdd_prefix = "smartctl --device sat"
+    for hdd, sn in hdd_sn_map.items():
+        health = await _send_cmd_get_txt(
+            f"{hdd_prefix} --health /dev/{hdd} | grep ': '"
+        )
+        assert "test result: PASSED" in health
 
-    # Open a new connection with the proper driver and input attrs
-    async with DRIVER_MAP[platform](**attr) as conn:
+        info = await _send_cmd_get_txt(
+            f"{hdd_prefix} --info /dev/{hdd} | grep ': '"
+        )
+        assert f"Serial Number:    {sn}" in info
+        assert "Device Model:     WDC WD40EFRX-68WT0N0" in info
+        assert "SMART support is: Available" in info
+        assert "SMART support is: Enabled" in info
 
-        # Get the prompt and ensure the node name exists inside it
-        prompt = await conn.get_prompt()
-        assert node.lower() in prompt.lower()
+        attrs = await _send_cmd_get_txt(
+            rf"{hdd_prefix} --attributes --format brief /dev/{hdd} | egrep '^\s*[0-9+]'"
+        )
+        faults = ["Error", "Retry", "Reallocated", "Uncorrectable"]
+        for attr in attrs.split("\n"):
+            s_attr = attr.strip().split()
+            assert s_attr[6] == "-"
 
-        # Perform detailed checks on a given device using conn w/ logging
-        logger = setup_logger(node, f"logs/{node}.txt")
-        await VERIFY_MAP[platform](conn, logger)
+            # Any fault-like counter should be 0
+            if any(fault in s_attr[1] for fault in faults):
+                assert s_attr[7] == "0"
+
+            # Check spin-up time, average is around 8100 ms for this device
+            elif s_attr[0] == "3":
+                assert int(s_attr[7]) < 8500
+
+            # Check temperature, average max is 49 celsius for this device
+            elif s_attr[0] == "194":
+                assert int(s_attr[7]) < 50
 
 
 async def main(config_file):
-
     # Load config details from file
     yaml = ruamel.yaml.YAML()
     with open(config_file, "r", encoding="utf-8") as handle:
-      config = yaml.load(handle)
+        config = yaml.load(handle)
 
     for node, attr in config["skip"].items():
         print(f"Skipping node {node} with attr {attr}")
-    
+
     # Instantiate coroutine into tasks for each node, merging in the login dict
     tasks = [
         check(node, attr | config["login"])
