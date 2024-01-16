@@ -1,0 +1,4 @@
+ntc-templates
+scrapli
+scrapli[asyncssh]
+scrapli[textfsm]
