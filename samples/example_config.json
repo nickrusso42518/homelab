@@ -1,0 +1,27 @@
+{
+  "login": {
+    "auth_username": "change me",
+    "auth_password": "change me",
+    "transport": "asyncssh",
+    "auth_strict_key": false,
+    "ssh_config_file": true
+  },
+  "nodes": {
+    "rs814": {
+      "host": "10.0.0.3",
+      "platform": "syno"
+    },
+    "c3750x": {
+      "host": "10.0.0.4",
+      "platform": "ios"
+    },
+    "esxi1": {
+      "host": "10.0.0.1",
+      "platform": "esxi"
+    },
+    "esxi2": {
+      "host": "10.0.0.2",
+      "platform": "esxi"
+    }
+  }
+}
