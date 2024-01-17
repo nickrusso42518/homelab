@@ -3,7 +3,6 @@ import json
 import csv
 import logging
 from io import StringIO
-import ruamel.yaml
 from scrapli.driver.core import AsyncIOSXEDriver
 from scrapli.driver.generic import AsyncGenericDriver
 
@@ -104,11 +103,6 @@ async def verify_ios(conn, logger):
     # RS-814 and laptop do not support CDP; remove those pairs then get CDP nbrs
     [intf_up_map.pop(port_id) for port_id in [3, 4, 9]]
     cdp_nbrs = await _send_cmd_get_lod("show cdp neighbors")
-
-    # cheap mocking code when servers are off
-    yaml = ruamel.yaml.YAML()
-    with open("desired/cdp_nbrs.yml", "r", encoding="utf-8") as handle:
-        cdp_nbrs = yaml.load(handle)
 
     # Ensure each desired CDP neighbor is present on the switch
     assert len(intf_up_map) == len(cdp_nbrs) == 8
@@ -220,6 +214,24 @@ async def verify_esxi(conn, logger):
         assert vswitch["Name"] == vmnic_vswitch_map.pop(i)
     assert len(vmnic_vswitch_map) == 0
 
+    # vmfs and volumes
+    nfs_vols = await _send_cmd_get_lod("storage nfs list")
+    assert len(nfs_vols) == 1
+    assert nfs_vols[0]["Host"] == "192.168.3.3"
+    assert nfs_vols[0]["Share"] == "/volume1/vsphere_nfs"
+    assert nfs_vols[0]["Accessible"] == "true"
+    assert nfs_vols[0]["Mounted"] == "true"
+    assert nfs_vols[0]["ReadOnly"] == "false"
+
+    vmfs_vols = await _send_cmd_get_lod(
+        "storage filesystem list | egrep '(Free|_)'"
+    )
+    assert len(vmfs_vols) == 4
+    for vmfs_vol in vmfs_vols:
+        assert vmfs_vol["Mounted"] == "true"
+        if "VMFS" in vmfs_vol["Type"]:
+            assert vmfs_vol["VolumeName"].startswith("ESXi")
+
 
 async def verify_syno(conn, logger):
     async def _send_cmd_get_txt(cmd):
@@ -294,11 +306,6 @@ async def verify_syno(conn, logger):
 
 async def main(config_file):
     # Load config details from file
-    """
-    yaml = ruamel.yaml.YAML()
-    with open(config_file, "r", encoding="utf-8") as handle:
-        config = yaml.load(handle)
-    """
     with open(config_file, "r", encoding="utf-8") as handle:
         config = json.load(handle)
 

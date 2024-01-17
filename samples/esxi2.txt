@@ -1,0 +1,284 @@
+2024-01-17 08:41:30,881 INFO SEND > "esxcli --formatter=csv system version get"
+2024-01-17 08:41:31,374 INFO REPLY > [
+  {
+    "Build": "Releasebuild-3620759",
+    "Patch": "34",
+    "Product": "VMware ESXi",
+    "Update": "2",
+    "Version": "6.0.0",
+    "": ""
+  }
+]
+2024-01-17 08:41:31,374 INFO SEND > "esxcli --formatter=csv network ip interface list"
+2024-01-17 08:41:31,926 INFO REPLY > [
+  {
+    "Enabled": "true",
+    "ExternalID": "N/A",
+    "MACAddress": "00:30:48:d7:60:be",
+    "MTU": "1500",
+    "Name": "vmk0",
+    "NetstackInstance": "defaultTcpipStack",
+    "OpaqueNetworkID": "N/A",
+    "OpaqueNetworkType": "N/A",
+    "PortID": "33554436",
+    "Portgroup": "Mgmt_PG",
+    "Portset": "vSwitch0",
+    "TSOMSS": "65535",
+    "VDSConnection": "-1",
+    "VDSName": "N/A",
+    "VDSPort": "N/A",
+    "VDSUUID": "N/A",
+    "": ""
+  },
+  {
+    "Enabled": "true",
+    "ExternalID": "N/A",
+    "MACAddress": "00:50:56:6f:96:9e",
+    "MTU": "1500",
+    "Name": "vmk1",
+    "NetstackInstance": "defaultTcpipStack",
+    "OpaqueNetworkID": "N/A",
+    "OpaqueNetworkType": "N/A",
+    "PortID": "83886084",
+    "Portgroup": "Internet_PG",
+    "Portset": "Internet_vSwitch",
+    "TSOMSS": "65535",
+    "VDSConnection": "-1",
+    "VDSName": "N/A",
+    "VDSPort": "N/A",
+    "VDSUUID": "N/A",
+    "": ""
+  },
+  {
+    "Enabled": "true",
+    "ExternalID": "N/A",
+    "MACAddress": "00:50:56:67:39:26",
+    "MTU": "1500",
+    "Name": "vmk2",
+    "NetstackInstance": "defaultTcpipStack",
+    "OpaqueNetworkID": "N/A",
+    "OpaqueNetworkType": "N/A",
+    "PortID": "50331652",
+    "Portgroup": "Storage_PG",
+    "Portset": "Storage_vSwitch",
+    "TSOMSS": "65535",
+    "VDSConnection": "-1",
+    "VDSName": "N/A",
+    "VDSPort": "N/A",
+    "VDSUUID": "N/A",
+    "": ""
+  }
+]
+2024-01-17 08:41:31,926 INFO SEND > "esxcli --formatter=csv network ip interface ipv4 get"
+2024-01-17 08:41:32,430 INFO REPLY > [
+  {
+    "AddressType": "STATIC",
+    "DHCPDNS": "false",
+    "IPv4Address": "192.168.2.2",
+    "IPv4Broadcast": "192.168.2.255",
+    "IPv4Netmask": "255.255.255.0",
+    "Name": "vmk0",
+    "": ""
+  },
+  {
+    "AddressType": "DHCP",
+    "DHCPDNS": "true",
+    "IPv4Address": "169.254.144.111",
+    "IPv4Broadcast": "169.254.255.255",
+    "IPv4Netmask": "255.255.0.0",
+    "Name": "vmk1",
+    "": ""
+  },
+  {
+    "AddressType": "STATIC",
+    "DHCPDNS": "false",
+    "IPv4Address": "192.168.3.2",
+    "IPv4Broadcast": "192.168.3.255",
+    "IPv4Netmask": "255.255.255.0",
+    "Name": "vmk2",
+    "": ""
+  }
+]
+2024-01-17 08:41:32,430 INFO SEND > "esxcli --formatter=csv network nic list"
+2024-01-17 08:41:33,038 INFO REPLY > [
+  {
+    "AdminStatus": "Up",
+    "Description": "Intel Corporation 82573L Gigabit Ethernet Controller",
+    "Driver": "e1000e",
+    "Duplex": "Full",
+    "Link": "Up",
+    "LinkStatus": "Up",
+    "MACAddress": "00:30:48:d7:60:be",
+    "MTU": "1500",
+    "Name": "vmnic0",
+    "PCIDevice": "0000:04:00.0",
+    "Speed": "1000",
+    "": ""
+  },
+  {
+    "AdminStatus": "Up",
+    "Description": "Intel Corporation 82573L Gigabit Ethernet Controller",
+    "Driver": "e1000e",
+    "Duplex": "Full",
+    "Link": "Up",
+    "LinkStatus": "Up",
+    "MACAddress": "00:30:48:d7:60:bf",
+    "MTU": "1500",
+    "Name": "vmnic1",
+    "PCIDevice": "0000:05:00.0",
+    "Speed": "1000",
+    "": ""
+  },
+  {
+    "AdminStatus": "Up",
+    "Description": "Intel Corporation I350 Gigabit Network Connection",
+    "Driver": "igb",
+    "Duplex": "Full",
+    "Link": "Up",
+    "LinkStatus": "Up",
+    "MACAddress": "a0:36:9f:34:ea:9c",
+    "MTU": "1500",
+    "Name": "vmnic2",
+    "PCIDevice": "0000:02:00.0",
+    "Speed": "1000",
+    "": ""
+  },
+  {
+    "AdminStatus": "Up",
+    "Description": "Intel Corporation I350 Gigabit Network Connection",
+    "Driver": "igb",
+    "Duplex": "Full",
+    "Link": "Up",
+    "LinkStatus": "Up",
+    "MACAddress": "a0:36:9f:34:ea:9d",
+    "MTU": "1500",
+    "Name": "vmnic3",
+    "PCIDevice": "0000:02:00.1",
+    "Speed": "1000",
+    "": ""
+  }
+]
+2024-01-17 08:41:33,038 INFO SEND > "esxcli --formatter=csv network vswitch standard list"
+2024-01-17 08:41:33,611 INFO REPLY > [
+  {
+    "BeaconEnabled": "false",
+    "BeaconInterval": "1",
+    "BeaconRequiredBy": "",
+    "BeaconThreshold": "3",
+    "CDPStatus": "both",
+    "Class": "etherswitch",
+    "ConfiguredPorts": "128",
+    "MTU": "1500",
+    "Name": "vSwitch0",
+    "NumPorts": "1752",
+    "Portgroups": "Mgmt_PG,",
+    "Uplinks": "vmnic0,",
+    "UsedPorts": "4",
+    "": ""
+  },
+  {
+    "BeaconEnabled": "false",
+    "BeaconInterval": "1",
+    "BeaconRequiredBy": "",
+    "BeaconThreshold": "3",
+    "CDPStatus": "both",
+    "Class": "etherswitch",
+    "ConfiguredPorts": "1024",
+    "MTU": "1500",
+    "Name": "Storage_vSwitch",
+    "NumPorts": "1752",
+    "Portgroups": "Storage_PG,",
+    "Uplinks": "vmnic1,",
+    "UsedPorts": "4",
+    "": ""
+  },
+  {
+    "BeaconEnabled": "false",
+    "BeaconInterval": "1",
+    "BeaconRequiredBy": "",
+    "BeaconThreshold": "3",
+    "CDPStatus": "both",
+    "Class": "etherswitch",
+    "ConfiguredPorts": "1024",
+    "MTU": "1500",
+    "Name": "Prod_vSwitch",
+    "NumPorts": "1752",
+    "Portgroups": "",
+    "Uplinks": "vmnic2,",
+    "UsedPorts": "3",
+    "": ""
+  },
+  {
+    "BeaconEnabled": "false",
+    "BeaconInterval": "1",
+    "BeaconRequiredBy": "",
+    "BeaconThreshold": "3",
+    "CDPStatus": "both",
+    "Class": "etherswitch",
+    "ConfiguredPorts": "1024",
+    "MTU": "1500",
+    "Name": "Internet_vSwitch",
+    "NumPorts": "1752",
+    "Portgroups": "Internet_PG,",
+    "Uplinks": "vmnic3,",
+    "UsedPorts": "4",
+    "": ""
+  }
+]
+2024-01-17 08:41:33,612 INFO SEND > "esxcli --formatter=csv storage nfs list"
+2024-01-17 08:41:34,139 INFO REPLY > [
+  {
+    "Accessible": "true",
+    "HardwareAcceleration": "Not Supported",
+    "Host": "192.168.3.3",
+    "Mounted": "true",
+    "ReadOnly": "false",
+    "Share": "/volume1/vsphere_nfs",
+    "VolumeName": "vSphere_NFS3",
+    "isPE": "false",
+    "": ""
+  }
+]
+2024-01-17 08:41:34,139 INFO SEND > "esxcli --formatter=csv storage filesystem list | egrep '(Free|_)'"
+2024-01-17 08:41:34,914 INFO REPLY > [
+  {
+    "Free": "10673594023936",
+    "MountPoint": "/vmfs/volumes/aa33dd10-b62c1a93",
+    "Mounted": "true",
+    "Size": "11893093441536",
+    "Type": "NFS",
+    "UUID": "aa33dd10-b62c1a93",
+    "VolumeName": "vSphere_NFS3",
+    "": ""
+  },
+  {
+    "Free": "470368124928",
+    "MountPoint": "/vmfs/volumes/541ece43-01d6c4d4-90ba-a0369f34ea9c",
+    "Mounted": "true",
+    "Size": "492042190848",
+    "Type": "VMFS-5",
+    "UUID": "541ece43-01d6c4d4-90ba-a0369f34ea9c",
+    "VolumeName": "ESXi2_HDD",
+    "": ""
+  },
+  {
+    "Free": "22914531328",
+    "MountPoint": "/vmfs/volumes/65a5e9e3-358b550b-a75e-a0369f34ea9c",
+    "Mounted": "true",
+    "Size": "23890755584",
+    "Type": "VMFS-5",
+    "UUID": "65a5e9e3-358b550b-a75e-a0369f34ea9c",
+    "VolumeName": "ESXi2_temp",
+    "": ""
+  },
+  {
+    "Free": "373668446208",
+    "MountPoint": "/vmfs/volumes/54ac6c23-97967df5-d28b-a0369f34ea9c",
+    "Mounted": "true",
+    "Size": "511906414592",
+    "Type": "VMFS-5",
+    "UUID": "54ac6c23-97967df5-d28b-a0369f34ea9c",
+    "VolumeName": "ESXi2_SSD",
+    "": ""
+  }
+]

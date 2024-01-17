@@ -1,0 +1,539 @@
+2024-01-17 08:41:32,457 INFO SEND > "show version"
+2024-01-17 08:41:32,750 INFO REPLY > [
+  {
+    "software_image": "C3750E-UNIVERSALK9-M",
+    "version": "15.2(4)E10",
+    "release": "fc2",
+    "rommon": "Bootstrap",
+    "hostname": "C3750X",
+    "uptime": "1 hour, 46 minutes",
+    "uptime_years": "",
+    "uptime_weeks": "",
+    "uptime_days": "",
+    "uptime_hours": "1",
+    "uptime_minutes": "46",
+    "reload_reason": "power-on",
+    "running_image": "c3750e-universalk9-mz.152-4.E10.bin",
+    "hardware": [
+      "WS-C3750X-24"
+    ],
+    "serial": [
+      "FDO1640Z0P3"
+    ],
+    "config_register": "0xF",
+    "mac": [
+      "E4:D3:F1:8E:88:00"
+    ],
+    "restarted": ""
+  }
+]
+2024-01-17 08:41:32,750 INFO SEND > "show vlan"
+2024-01-17 08:41:32,820 INFO REPLY > [
+  {
+    "vlan_id": "1",
+    "name": "default",
+    "status": "active",
+    "interfaces": [
+      "Gi1/0/15",
+      "Gi1/0/16",
+      "Gi1/0/17",
+      "Gi1/0/18"
+    ]
+  },
+  {
+    "vlan_id": "1002",
+    "name": "fddi-default",
+    "status": "act/unsup",
+    "interfaces": []
+  },
+  {
+    "vlan_id": "1003",
+    "name": "token-ring-default",
+    "status": "act/unsup",
+    "interfaces": []
+  },
+  {
+    "vlan_id": "1004",
+    "name": "fddinet-default",
+    "status": "act/unsup",
+    "interfaces": []
+  },
+  {
+    "vlan_id": "1005",
+    "name": "trnet-default",
+    "status": "act/unsup",
+    "interfaces": []
+  },
+  {
+    "vlan_id": "4000",
+    "name": "EXPERIMENT",
+    "status": "active",
+    "interfaces": []
+  },
+  {
+    "vlan_id": "4001",
+    "name": "INTERNET",
+    "status": "active",
+    "interfaces": [
+      "Gi1/0/19",
+      "Gi1/0/20",
+      "Gi1/0/21",
+      "Gi1/0/22",
+      "Gi1/0/23",
+      "Gi1/0/24"
+    ]
+  },
+  {
+    "vlan_id": "4002",
+    "name": "MGMT",
+    "status": "active",
+    "interfaces": [
+      "Gi1/0/1",
+      "Gi1/0/2",
+      "Gi1/0/3",
+      "Gi1/0/4",
+      "Gi1/0/5",
+      "Gi1/0/6"
+    ]
+  },
+  {
+    "vlan_id": "4003",
+    "name": "NAS",
+    "status": "active",
+    "interfaces": [
+      "Gi1/0/7",
+      "Gi1/0/8",
+      "Gi1/0/9",
+      "Gi1/0/10",
+      "Gi1/0/11",
+      "Gi1/0/12"
+    ]
+  }
+]
+2024-01-17 08:41:32,820 INFO SEND > "show interfaces status"
+2024-01-17 08:41:32,892 INFO REPLY > [
+  {
+    "port": "Gi1/0/1",
+    "name": "MGMT - ESXI1 NIC0",
+    "status": "connected",
+    "vlan": "4002",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/2",
+    "name": "MGMT - ESXI2 NIC0",
+    "status": "connected",
+    "vlan": "4002",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/3",
+    "name": "MGMT - RS814 LAN1",
+    "status": "connected",
+    "vlan": "4002",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/4",
+    "name": "MGMT - LAB PC",
+    "status": "connected",
+    "vlan": "4002",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/5",
+    "name": "MGMT",
+    "status": "notconnect",
+    "vlan": "4002",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/6",
+    "name": "MGMT",
+    "status": "notconnect",
+    "vlan": "4002",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/7",
+    "name": "NAS - ESXI1 NIC1",
+    "status": "connected",
+    "vlan": "4003",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/8",
+    "name": "NAS - ESXI2 NIC1",
+    "status": "connected",
+    "vlan": "4003",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/9",
+    "name": "NAS - RS814 LAN2",
+    "status": "connected",
+    "vlan": "4003",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/10",
+    "name": "NAS",
+    "status": "notconnect",
+    "vlan": "4003",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/11",
+    "name": "NAS",
+    "status": "notconnect",
+    "vlan": "4003",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/12",
+    "name": "NAS",
+    "status": "notconnect",
+    "vlan": "4003",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/13",
+    "name": "PROD - ESXI1 NIC2",
+    "status": "connected",
+    "vlan": "trunk",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/14",
+    "name": "PROD - ESXI2 NIC2",
+    "status": "connected",
+    "vlan": "trunk",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/15",
+    "name": "PROD",
+    "status": "notconnect",
+    "vlan": "trunk",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/16",
+    "name": "PROD",
+    "status": "notconnect",
+    "vlan": "trunk",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/17",
+    "name": "PROD",
+    "status": "notconnect",
+    "vlan": "trunk",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/18",
+    "name": "PROD",
+    "status": "notconnect",
+    "vlan": "trunk",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/19",
+    "name": "INET - ESXI1 NIC3",
+    "status": "connected",
+    "vlan": "4001",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/20",
+    "name": "INET - ESXI2 NIC3",
+    "status": "connected",
+    "vlan": "4001",
+    "duplex": "a-full",
+    "speed": "a-1000",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/21",
+    "name": "INET - UPLINK",
+    "status": "notconnect",
+    "vlan": "4001",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/22",
+    "name": "INET",
+    "status": "notconnect",
+    "vlan": "4001",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/23",
+    "name": "INET",
+    "status": "notconnect",
+    "vlan": "4001",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Gi1/0/24",
+    "name": "INET",
+    "status": "notconnect",
+    "vlan": "4001",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100/1000BaseTX",
+    "fc_mode": ""
+  },
+  {
+    "port": "Fa0",
+    "name": "OOBM - UNUSED",
+    "status": "disabled",
+    "vlan": "routed",
+    "duplex": "auto",
+    "speed": "auto",
+    "type": "10/100BaseTX",
+    "fc_mode": ""
+  }
+]
+2024-01-17 08:41:32,892 INFO SEND > "show cdp neighbors"
+2024-01-17 08:41:32,949 INFO REPLY > [
+  {
+    "neighbor": "esxi1.fios-router.home",
+    "local_interface": "Gig 1/0/19",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic3"
+  },
+  {
+    "neighbor": "esxi1.fios-router.home",
+    "local_interface": "Gig 1/0/13",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic2"
+  },
+  {
+    "neighbor": "esxi1.fios-router.home",
+    "local_interface": "Gig 1/0/7",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic1"
+  },
+  {
+    "neighbor": "esxi1.fios-router.home",
+    "local_interface": "Gig 1/0/1",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic0"
+  },
+  {
+    "neighbor": "esxi2.fios-router.home",
+    "local_interface": "Gig 1/0/20",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic3"
+  },
+  {
+    "neighbor": "esxi2.fios-router.home",
+    "local_interface": "Gig 1/0/14",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic2"
+  },
+  {
+    "neighbor": "esxi2.fios-router.home",
+    "local_interface": "Gig 1/0/8",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic1"
+  },
+  {
+    "neighbor": "esxi2.fios-router.home",
+    "local_interface": "Gig 1/0/2",
+    "capability": "S",
+    "platform": "VMware",
+    "neighbor_interface": "ES vmnic0"
+  }
+]
+2024-01-17 08:41:32,949 INFO SEND > "show ip interface brief | exclude unassigned"
+2024-01-17 08:41:33,046 INFO REPLY > [
+  {
+    "intf": "Vlan4001",
+    "ipaddr": "192.168.1.254",
+    "status": "up",
+    "proto": "up"
+  },
+  {
+    "intf": "Vlan4002",
+    "ipaddr": "192.168.2.254",
+    "status": "up",
+    "proto": "up"
+  },
+  {
+    "intf": "Vlan4003",
+    "ipaddr": "192.168.3.254",
+    "status": "up",
+    "proto": "up"
+  }
+]
+2024-01-17 08:41:33,046 INFO SEND > "show ip route"
+2024-01-17 08:41:33,094 INFO REPLY > [
+  {
+    "vrf": "",
+    "protocol": "S",
+    "type": "",
+    "network": "0.0.0.0",
+    "mask": "0",
+    "distance": "1",
+    "metric": "0",
+    "nexthop_ip": "192.168.1.1",
+    "nexthop_vrf": "",
+    "nexthop_if": "Vlan4001",
+    "uptime": ""
+  },
+  {
+    "vrf": "",
+    "protocol": "C",
+    "type": "",
+    "network": "192.168.1.0",
+    "mask": "24",
+    "distance": "",
+    "metric": "",
+    "nexthop_ip": "",
+    "nexthop_vrf": "",
+    "nexthop_if": "Vlan4001",
+    "uptime": ""
+  },
+  {
+    "vrf": "",
+    "protocol": "L",
+    "type": "",
+    "network": "192.168.1.254",
+    "mask": "32",
+    "distance": "",
+    "metric": "",
+    "nexthop_ip": "",
+    "nexthop_vrf": "",
+    "nexthop_if": "Vlan4001",
+    "uptime": ""
+  },
+  {
+    "vrf": "",
+    "protocol": "C",
+    "type": "",
+    "network": "192.168.2.0",
+    "mask": "24",
+    "distance": "",
+    "metric": "",
+    "nexthop_ip": "",
+    "nexthop_vrf": "",
+    "nexthop_if": "Vlan4002",
+    "uptime": ""
+  },
+  {
+    "vrf": "",
+    "protocol": "L",
+    "type": "",
+    "network": "192.168.2.254",
+    "mask": "32",
+    "distance": "",
+    "metric": "",
+    "nexthop_ip": "",
+    "nexthop_vrf": "",
+    "nexthop_if": "Vlan4002",
+    "uptime": ""
+  },
+  {
+    "vrf": "",
+    "protocol": "C",
+    "type": "",
+    "network": "192.168.3.0",
+    "mask": "24",
+    "distance": "",
+    "metric": "",
+    "nexthop_ip": "",
+    "nexthop_vrf": "",
+    "nexthop_if": "Vlan4003",
+    "uptime": ""
+  },
+  {
+    "vrf": "",
+    "protocol": "L",
+    "type": "",
+    "network": "192.168.3.254",
+    "mask": "32",
+    "distance": "",
+    "metric": "",
+    "nexthop_ip": "",
+    "nexthop_vrf": "",
+    "nexthop_if": "Vlan4003",
+    "uptime": ""
+  }
+]
