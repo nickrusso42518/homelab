@@ -73,16 +73,53 @@ async def verify_ios(conn, logger):
             assert desired_vlans.pop(vlid) == vlan["name"].lower()
     assert len(desired_vlans) == 0
 
+    intf_up_map = {
+        # MGMT
+        1: ("4002", "ESXI1 NIC0"),
+        2: ("4002", "ESXI2 NIC0"),
+        3: ("4002", "RS814 LAN1"),
+        4: ("4002", "LAB PC"),
+        # NAS
+        7: ("4003", "ESXI1 NIC1"),
+        8: ("4003", "ESXI2 NIC1"),
+        9: ("4003", "RS814 LAN2"),
+        # PROD
+        13: ("trunk", "ESXI1 NIC2"),
+        14: ("trunk", "ESXI2 NIC2"),
+        # INET (will be down if servers are off)
+        19: ("4001", "ESXI1 NIC3"),
+        20: ("4001", "ESXI2 NIC3"),
+    }
+    intfs = await _send_cmd_get_lod("show interfaces status")
+    for port_id, attr in intf_up_map.items():
+        for intf in intfs:
+            if intf["port"] == f"Gi1/0/{port_id}":
+                vlan, desc = attr
+                assert intf["vlan"] == vlan
+                assert intf["name"].endswith(desc)
+                assert intf["type"] == "10/100/1000BaseTX"
+                assert intf["status"] == "connected"
+                assert intf["duplex"] == "a-full"
+
+    # RS-814 and laptop do not support CDP; remove those pairs then get CDP nbrs
+    [intf_up_map.pop(port_id) for port_id in [3, 4, 9]]
     cdp_nbrs = await _send_cmd_get_lod("show cdp neighbors")
 
-    # Ensure each desired CDP neighbor is present on the switch
+    # cheap mocking code when servers are off
     yaml = ruamel.yaml.YAML()
     with open("desired/cdp_nbrs.yml", "r", encoding="utf-8") as handle:
-        desired_cdp_nbrs = yaml.load(handle)
+        cdp_nbrs = yaml.load(handle)
 
-    for desired_cdp_nbr in desired_cdp_nbrs:
-        # assert desired_cdp_nbr in cdp_nbrs
-        pass
+    # Ensure each desired CDP neighbor is present on the switch
+    assert len(intf_up_map) == len(cdp_nbrs) == 8
+
+    for port_id, attr in intf_up_map.items():
+        for cdp_nbr in cdp_nbrs:
+            if cdp_nbr["local_interface"] == f"Gig 1/0/{port_id}":
+                assert attr[1][:5] == cdp_nbr["neighbor"][:5].upper()
+                assert "S" in cdp_nbr["capability"]
+                assert cdp_nbr["platform"] == "VMware"
+                assert attr[1][-4:] == cdp_nbr["neighbor_interface"][-4:].upper()
 
     # Extra SVIs are OK
     svis = await _send_cmd_get_lod("show ip interface brief | exclude unassigned")
@@ -257,12 +294,13 @@ async def verify_syno(conn, logger):
 
 async def main(config_file):
     # Load config details from file
+    """
     yaml = ruamel.yaml.YAML()
     with open(config_file, "r", encoding="utf-8") as handle:
         config = yaml.load(handle)
-
-    for node, attr in config["skip"].items():
-        print(f"Skipping node {node} with attr {attr}")
+    """
+    with open(config_file, "r", encoding="utf-8") as handle:
+        config = json.load(handle)
 
     # Instantiate coroutine into tasks for each node, merging in the login dict
     tasks = [
@@ -278,4 +316,4 @@ async def main(config_file):
 
 
 if __name__ == "__main__":
-    asyncio.run(main("config.yml"))
+    asyncio.run(main("config.json"))
