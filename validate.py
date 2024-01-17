@@ -303,6 +303,11 @@ async def verify_syno(conn, logger):
             elif s_attr[0] == "194":
                 assert int(s_attr[7]) < 50
 
+    nfs_conns = await _send_cmd_get_txt("netstat -tn | grep :2049")
+    for esxi_ip in ["192.168.3.1", "192.168.3.2"]:
+        assert esxi_ip in nfs_conns
+    assert all(nc.strip().endswith("ESTABLISHED") for nc in nfs_conns.split("\n"))
+
 
 async def main(config_file):
     # Load config details from file
