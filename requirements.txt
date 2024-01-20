@@ -2,6 +2,3 @@ scrapli
 scrapli[asyncssh]
 scrapli[textfsm]
 ntc-templates
-pylint
-black
-yamllint

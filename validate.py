@@ -1,6 +1,14 @@
+#!/usr/bin/env python
+
+"""
+Author: Nick Russo (njrusmc@gmail.com)
+Purpose: Validates the Home lab network components.
+"""
+
 import asyncio
 import json
 import csv
+import os
 import logging
 from io import StringIO
 from scrapli.driver.core import AsyncIOSXEDriver
@@ -8,25 +16,33 @@ from scrapli.driver.generic import AsyncGenericDriver
 
 
 def setup_logger(name, log_file, level=logging.INFO):
+    """
+    Given a logger name and file name, this function returns a new logger
+    object to write into the specified file. You can absolutely specify the
+    login level which defaults to INFO.
+    """
+
     handler = logging.FileHandler(log_file)
     handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
     logger = logging.getLogger(name)
     logger.setLevel(level)
     logger.addHandler(handler)
-
     return logger
 
 
 async def check(node, attr):
     """
     Coroutine that performs platform/device-specific checks on each node.
+    It selects the correct scrapli driver and OS-specific verify coroutine.
     """
+    # Map the textual platform names to the Srapli async driver constructors
     driver_map = {
         "ios": AsyncIOSXEDriver,
         "esxi": AsyncGenericDriver,
         "syno": AsyncGenericDriver,
     }
 
+    # Map the textual platform names to the verify coroutines
     verify_map = {
         "ios": verify_ios,
         "esxi": verify_esxi,
@@ -48,16 +64,27 @@ async def check(node, attr):
 
 
 async def verify_ios(conn, logger):
+    """
+    Verify Cisco IOS devices.
+    """
+
     async def _send_cmd_get_lod(cmd):
+        """
+        Send the specified command and return a list of dictionaries (lod)
+        using textFSM. This relies on the network to code (NTC) templates.
+        Both the text command and JSON output are logged.
+        """
         logger.info('SEND > "%s"', cmd)
         resp = await conn.send_command(cmd)
         lod = resp.textfsm_parse_output()
         logger.info("REPLY > %s", json.dumps(lod, indent=2))
         return lod
 
+    # Check for correct versions
     version = await _send_cmd_get_lod("show version")
     assert "15.2(4)e10" == version[0]["version"].lower()
 
+    # Ensure the 4 infrastructure VLANs exist
     vlans = await _send_cmd_get_lod("show vlan")
     desired_vlans = {
         4000: "experiment",
@@ -72,6 +99,7 @@ async def verify_ios(conn, logger):
             assert desired_vlans.pop(vlid) == vlan["name"].lower()
     assert len(desired_vlans) == 0
 
+    # Ensure port VLAN, descriptions, speed, and duplex are correct
     intf_up_map = {
         # MGMT
         1: ("4002", "ESXI1 NIC0"),
@@ -85,7 +113,7 @@ async def verify_ios(conn, logger):
         # PROD
         13: ("trunk", "ESXI1 NIC2"),
         14: ("trunk", "ESXI2 NIC2"),
-        # INET (will be down if servers are off)
+        # INET (will be down if servers are off, no WOL)
         19: ("4001", "ESXI1 NIC3"),
         20: ("4001", "ESXI2 NIC3"),
     }
@@ -101,7 +129,7 @@ async def verify_ios(conn, logger):
                 assert intf["duplex"] == "a-full"
 
     # RS-814 and laptop do not support CDP; remove those pairs then get CDP nbrs
-    [intf_up_map.pop(port_id) for port_id in [3, 4, 9]]
+    _ = [intf_up_map.pop(port_id) for port_id in [3, 4, 9]]
     cdp_nbrs = await _send_cmd_get_lod("show cdp neighbors")
 
     # Ensure each desired CDP neighbor is present on the switch
@@ -115,7 +143,8 @@ async def verify_ios(conn, logger):
                 assert cdp_nbr["platform"] == "VMware"
                 assert attr[1][-4:] == cdp_nbr["neighbor_interface"][-4:].upper()
 
-    # Extra SVIs are OK
+    # Ensure infrastructure SVIs are up (minus 4000)
+    # Extra SVIs are OK; do not assert failure on default case
     svis = await _send_cmd_get_lod("show ip interface brief | exclude unassigned")
     for svi in svis:
         assert svi["status"] == svi["proto"] == "up"
@@ -127,6 +156,7 @@ async def verify_ios(conn, logger):
             case "Vlan4003":
                 assert svi["ipaddr"] == "192.168.3.254"
 
+    # Ensure there is one default route via the Internet gateway (home router)
     routes = await _send_cmd_get_lod("show ip route")
     defrte = [d for d in routes if d["network"] == "0.0.0.0" and d["mask"] == "0"]
     assert len(defrte) == 1
@@ -136,21 +166,34 @@ async def verify_ios(conn, logger):
 
 
 async def verify_esxi(conn, logger):
+    """
+    Verify VMware ESXi servers.
+    """
+
     async def _send_cmd_get_lod(ns_cmd):
+        """
+        Send the specified command and return a list of dictionaries (lod)
+        using textFSM. This relies on the network to code (NTC) templates.
+        Both the text command and JSON output are logged. Note that the
+        supplied command is prepending with "esxcli --formatter=csv" so this
+        should not be included.
+        """
+
         cmd = f"esxcli --formatter=csv {ns_cmd}"
         logger.info('SEND > "%s"', cmd)
         resp = await conn.send_command(cmd)
         matrix = list(csv.reader(StringIO(resp.result)))
-        # lod = [{k: v for k, v in zip(matrix[0], row)} for row in matrix[1:]]
         lod = [dict(zip(matrix[0], row)) for row in matrix[1:]]
         logger.info("REPLY > %s", json.dumps(lod, indent=2))
         return lod
 
+    # Get the system version and check against expected output
     version = await _send_cmd_get_lod("system version get")
     assert len(version) == 1
     assert version[0]["Build"] == "Releasebuild-3620759"
 
     # Get VMK details (MTU, portgroup assignments, etc)
+    # The default case asserts failure to ensure no extra VMKs exist
     vmk_dets = await _send_cmd_get_lod("network ip interface list")
     assert len(vmk_dets) == 3
     for vmk_det in vmk_dets:
@@ -170,7 +213,7 @@ async def verify_esxi(conn, logger):
             case _:
                 assert False
 
-    # Get VMK IPv4 details
+    # Get VMK IPv4 details and check them
     vmk_ipv4s = await _send_cmd_get_lod("network ip interface ipv4 get")
     assert len(vmk_ipv4s) == 3
     for vmk_ipv4 in vmk_ipv4s:
@@ -193,6 +236,7 @@ async def verify_esxi(conn, logger):
             case _:
                 assert False
 
+    # Ensure all physical NICs are up and negotiated 1 Gbps/full duplex
     nics = await _send_cmd_get_lod("network nic list")
     assert len(nics) == 4
     for nic in nics:
@@ -201,6 +245,7 @@ async def verify_esxi(conn, logger):
         assert nic["MTU"] == "1500"
         assert nic["Speed"] == "1000"
 
+    # Ensure that the 4 vSwitches are maped to the 4 physical NICs correctly.
     vmnic_vswitch_map = {
         0: "vSwitch0",
         1: "Storage_vSwitch",
@@ -214,7 +259,7 @@ async def verify_esxi(conn, logger):
         assert vswitch["Name"] == vmnic_vswitch_map.pop(i)
     assert len(vmnic_vswitch_map) == 0
 
-    # vmfs and volumes
+    # Get the NFS volume and ensure it's setup correctly
     nfs_vols = await _send_cmd_get_lod("storage nfs list")
     assert len(nfs_vols) == 1
     assert nfs_vols[0]["Host"] == "192.168.3.3"
@@ -223,6 +268,7 @@ async def verify_esxi(conn, logger):
     assert nfs_vols[0]["Mounted"] == "true"
     assert nfs_vols[0]["ReadOnly"] == "false"
 
+    # Get the VMFS (disk) volumes and ensure they are named correctly
     vmfs_vols = await _send_cmd_get_lod(
         "storage filesystem list | egrep '(Free|_)'"
     )
@@ -234,15 +280,25 @@ async def verify_esxi(conn, logger):
 
 
 async def verify_syno(conn, logger):
+    """
+    Verify Synology storage systems (such as RackStation or DiskStation).
+    """
+
     async def _send_cmd_get_txt(cmd):
+        """
+        Send the specified command and return the text output. There is
+        no quick way to parse this data.
+        """
         logger.info('SEND > "%s"', cmd)
         resp = await conn.send_command(cmd)
         logger.info("REPLY > %s", resp.result)
         return resp.result
 
+    # Check for the correct version
     version = await _send_cmd_get_txt("cat /etc.defaults/VERSION")
     assert 'productversion="6.2.2"' in version
 
+    # Check for the correct IP addresses and interfaces
     intf_ipv4_map = {
         "eth0": "192.168.2.3/24",
         "eth1": "192.168.3.3/24",
@@ -251,6 +307,7 @@ async def verify_syno(conn, logger):
         net = await _send_cmd_get_txt(f"ip addr show {intf}")
         assert ipv4 in net
 
+    # Ensure there is a default route via the management gateway
     defrte = await _send_cmd_get_txt("ip route show 0.0.0.0/0")
     assert defrte.startswith("default via 192.168.2.254")
 
@@ -262,6 +319,8 @@ async def verify_syno(conn, logger):
         ]
     )
     assert sudo.result.endswith(":~#")
+
+    # Perform disk-related checks
     hdd_sn_map = {
         "sda": "WD-WCC4E4EE6XT9",
         "sdb": "WD-WCC4E3CP9J1R",
@@ -270,11 +329,13 @@ async def verify_syno(conn, logger):
     }
     hdd_prefix = "smartctl --device sat"
     for hdd, sn in hdd_sn_map.items():
+        # Check overall disk health
         health = await _send_cmd_get_txt(
             f"{hdd_prefix} --health /dev/{hdd} | grep ': '"
         )
         assert "test result: PASSED" in health
 
+        # Check serial numbers and SMART support
         info = await _send_cmd_get_txt(
             f"{hdd_prefix} --info /dev/{hdd} | grep ': '"
         )
@@ -283,11 +344,13 @@ async def verify_syno(conn, logger):
         assert "SMART support is: Available" in info
         assert "SMART support is: Enabled" in info
 
+        # Collect detailed attributes for more checks
         attrs = await _send_cmd_get_txt(
             rf"{hdd_prefix} --attributes --format brief /dev/{hdd} | egrep '^\s*[0-9+]'"
         )
         faults = ["Error", "Retry", "Reallocated", "Uncorrectable"]
         for attr in attrs.split("\n"):
+            # Ensure none of the attributes report a failure
             s_attr = attr.strip().split()
             assert s_attr[6] == "-"
 
@@ -303,6 +366,7 @@ async def verify_syno(conn, logger):
             elif s_attr[0] == "194":
                 assert int(s_attr[7]) < 50
 
+    # Ensure there are 2 NFS client connections from each ESXi server
     nfs_conns = await _send_cmd_get_txt("netstat -tn | grep :2049")
     for esxi_ip in ["192.168.3.1", "192.168.3.2"]:
         assert esxi_ip in nfs_conns
@@ -310,9 +374,17 @@ async def verify_syno(conn, logger):
 
 
 async def main(config_file):
-    # Load config details from file
+    """
+    Execution starts here.
+    """
+
+    # Load config details from supplied file
     with open(config_file, "r", encoding="utf-8") as handle:
         config = json.load(handle)
+
+    # Create the "logs" directory if it doesn't exist
+    if not os.path.exists("logs"):
+        os.makedirs("logs")
 
     # Instantiate coroutine into tasks for each node, merging in the login dict
     tasks = [
@@ -324,6 +396,7 @@ async def main(config_file):
     task_future = asyncio.gather(*tasks)
     await task_future
 
+    # Print simple message to indicate success
     print("OK")
 
 
