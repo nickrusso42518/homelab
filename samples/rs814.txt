@@ -1,5 +1,5 @@
-2024-01-17 08:41:31,353 INFO SEND > "cat /etc.defaults/VERSION"
-2024-01-17 08:41:31,363 INFO REPLY > majorversion="6"
+2024-01-21 06:09:37,841 INFO SEND > "cat /etc.defaults/VERSION"
+2024-01-21 06:09:37,851 INFO REPLY > majorversion="6"
 minorversion="2"
 productversion="6.2.2"
 buildphase="GM"
@@ -9,20 +9,20 @@ packing="official"
 packing_id="18"
 builddate="2019/10/30"
 buildtime="05:21:02"
-2024-01-17 08:41:31,364 INFO SEND > "ip addr show eth0"
-2024-01-17 08:41:31,375 INFO REPLY > 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 532
+2024-01-21 06:09:37,851 INFO SEND > "ip addr show eth0"
+2024-01-21 06:09:37,861 INFO REPLY > 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 532
     link/ether 00:11:32:3e:3a:c9 brd ff:ff:ff:ff:ff:ff
     inet 192.168.2.3/24 brd 192.168.2.255 scope global eth0
-2024-01-17 08:41:31,375 INFO SEND > "ip addr show eth1"
-2024-01-17 08:41:31,383 INFO REPLY > 3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 532
+2024-01-21 06:09:37,861 INFO SEND > "ip addr show eth1"
+2024-01-21 06:09:37,872 INFO REPLY > 3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 532
     link/ether 00:11:32:3e:3a:ca brd ff:ff:ff:ff:ff:ff
     inet 192.168.3.3/24 brd 192.168.3.255 scope global eth1
-2024-01-17 08:41:31,383 INFO SEND > "ip route show 0.0.0.0/0"
-2024-01-17 08:41:31,393 INFO REPLY > default via 192.168.2.254 dev eth0  src 192.168.2.3
-2024-01-17 08:41:31,875 INFO SEND > "smartctl --device sat --health /dev/sda | grep ': '"
-2024-01-17 08:41:32,189 INFO REPLY > SMART overall-health self-assessment test result: PASSED
-2024-01-17 08:41:32,189 INFO SEND > "smartctl --device sat --info /dev/sda | grep ': '"
-2024-01-17 08:41:32,418 INFO REPLY > Model Family:     Western Digital Red
+2024-01-21 06:09:37,872 INFO SEND > "ip route show 0.0.0.0/0"
+2024-01-21 06:09:37,882 INFO REPLY > default via 192.168.2.254 dev eth0  src 192.168.2.3
+2024-01-21 06:09:38,367 INFO SEND > "smartctl --device sat --health /dev/sda | grep ': '"
+2024-01-21 06:09:38,679 INFO REPLY > SMART overall-health self-assessment test result: PASSED
+2024-01-21 06:09:38,679 INFO SEND > "smartctl --device sat --info /dev/sda | grep ': '"
+2024-01-21 06:09:38,909 INFO REPLY > Model Family:     Western Digital Red
 Device Model:     WDC WD40EFRX-68WT0N0
 Serial Number:    WD-WCC4E4EE6XT9
 LU WWN Device Id: 5 0014ee 2b5f3b582
@@ -33,31 +33,31 @@ Rotation Rate:    5400 rpm
 Device is:        In smartctl database [for details use: -P show]
 ATA Version is:   ACS-2 (minor revision not indicated)
 SATA Version is:  SATA 3.0, 6.0 Gb/s (current: 3.0 Gb/s)
-Local Time is:    Sun Nov 19 10:47:25 2000 EST
+Local Time is:    Thu Nov 23 08:15:39 2000 EST
 SMART support is: Available - device has SMART capability.
 SMART support is: Enabled
-2024-01-17 08:41:32,418 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sda | egrep '^\s*[0-9+]'"
-2024-01-17 08:41:32,751 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
-  3 Spin_Up_Time                                                     POS--K   177   174   021    -    8125
-  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    133
+2024-01-21 06:09:38,909 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sda | egrep '^\s*[0-9+]'"
+2024-01-21 06:09:39,189 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
+  3 Spin_Up_Time                                                     POS--K   177   174   021    -    8116
+  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    135
   5 Reallocated_Sector_Ct                                            PO--CK   200   200   140    -    0
   7 Seek_Error_Rate                                                  -OSR-K   200   200   000    -    0
-  9 Power_On_Hours                                                   -O--CK   100   100   000    -    312
+  9 Power_On_Hours                                                   -O--CK   100   100   000    -    314
  10 Spin_Retry_Count                                                 -O--CK   100   100   000    -    0
  11 Calibration_Retry_Count                                          -O--CK   100   100   000    -    0
- 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    131
+ 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    133
 192 Power-Off_Retract_Count                                          -O--CK   200   200   000    -    0
-193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    134
-194 Temperature_Celsius                                              -O---K   113   110   000    -    39
+193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    136
+194 Temperature_Celsius                                              -O---K   115   110   000    -    37
 196 Reallocated_Event_Count                                          -O--CK   200   200   000    -    0
 197 Current_Pending_Sector                                           -O--CK   200   200   000    -    0
 198 Offline_Uncorrectable                                            ----CK   100   253   000    -    0
 199 UDMA_CRC_Error_Count                                             -O--CK   200   200   000    -    0
 200 Multi_Zone_Error_Rate                                            ---R--   100   253   000    -    0
-2024-01-17 08:41:32,751 INFO SEND > "smartctl --device sat --health /dev/sdb | grep ': '"
-2024-01-17 08:41:33,059 INFO REPLY > SMART overall-health self-assessment test result: PASSED
-2024-01-17 08:41:33,059 INFO SEND > "smartctl --device sat --info /dev/sdb | grep ': '"
-2024-01-17 08:41:33,289 INFO REPLY > Model Family:     Western Digital Red
+2024-01-21 06:09:39,190 INFO SEND > "smartctl --device sat --health /dev/sdb | grep ': '"
+2024-01-21 06:09:39,499 INFO REPLY > SMART overall-health self-assessment test result: PASSED
+2024-01-21 06:09:39,499 INFO SEND > "smartctl --device sat --info /dev/sdb | grep ': '"
+2024-01-21 06:09:39,729 INFO REPLY > Model Family:     Western Digital Red
 Device Model:     WDC WD40EFRX-68WT0N0
 Serial Number:    WD-WCC4E3CP9J1R
 LU WWN Device Id: 5 0014ee 2b5f07f87
@@ -68,31 +68,31 @@ Rotation Rate:    5400 rpm
 Device is:        In smartctl database [for details use: -P show]
 ATA Version is:   ACS-2 (minor revision not indicated)
 SATA Version is:  SATA 3.0, 6.0 Gb/s (current: 3.0 Gb/s)
-Local Time is:    Sun Nov 19 10:47:26 2000 EST
+Local Time is:    Thu Nov 23 08:15:40 2000 EST
 SMART support is: Available - device has SMART capability.
 SMART support is: Enabled
-2024-01-17 08:41:33,290 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sdb | egrep '^\s*[0-9+]'"
-2024-01-17 08:41:33,630 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
-  3 Spin_Up_Time                                                     POS--K   176   172   021    -    8191
-  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    135
+2024-01-21 06:09:39,729 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sdb | egrep '^\s*[0-9+]'"
+2024-01-21 06:09:39,999 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
+  3 Spin_Up_Time                                                     POS--K   176   172   021    -    8166
+  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    137
   5 Reallocated_Sector_Ct                                            PO--CK   200   200   140    -    0
   7 Seek_Error_Rate                                                  -OSR-K   200   200   000    -    0
-  9 Power_On_Hours                                                   -O--CK   100   100   000    -    312
+  9 Power_On_Hours                                                   -O--CK   100   100   000    -    313
  10 Spin_Retry_Count                                                 -O--CK   100   100   000    -    0
  11 Calibration_Retry_Count                                          -O--CK   100   100   000    -    0
- 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    133
+ 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    135
 192 Power-Off_Retract_Count                                          -O--CK   200   200   000    -    1
-193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    134
-194 Temperature_Celsius                                              -O---K   110   109   000    -    42
+193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    136
+194 Temperature_Celsius                                              -O---K   114   109   000    -    38
 196 Reallocated_Event_Count                                          -O--CK   200   200   000    -    0
 197 Current_Pending_Sector                                           -O--CK   200   200   000    -    0
 198 Offline_Uncorrectable                                            ----CK   100   253   000    -    0
 199 UDMA_CRC_Error_Count                                             -O--CK   200   200   000    -    0
 200 Multi_Zone_Error_Rate                                            ---R--   100   253   000    -    0
-2024-01-17 08:41:33,630 INFO SEND > "smartctl --device sat --health /dev/sdc | grep ': '"
-2024-01-17 08:41:33,939 INFO REPLY > SMART overall-health self-assessment test result: PASSED
-2024-01-17 08:41:33,940 INFO SEND > "smartctl --device sat --info /dev/sdc | grep ': '"
-2024-01-17 08:41:34,169 INFO REPLY > Model Family:     Western Digital Red
+2024-01-21 06:09:39,999 INFO SEND > "smartctl --device sat --health /dev/sdc | grep ': '"
+2024-01-21 06:09:40,379 INFO REPLY > SMART overall-health self-assessment test result: PASSED
+2024-01-21 06:09:40,379 INFO SEND > "smartctl --device sat --info /dev/sdc | grep ': '"
+2024-01-21 06:09:40,609 INFO REPLY > Model Family:     Western Digital Red
 Device Model:     WDC WD40EFRX-68WT0N0
 Serial Number:    WD-WCC4E3ZS9U9F
 LU WWN Device Id: 5 0014ee 2b5f367d1
@@ -103,31 +103,31 @@ Rotation Rate:    5400 rpm
 Device is:        In smartctl database [for details use: -P show]
 ATA Version is:   ACS-2 (minor revision not indicated)
 SATA Version is:  SATA 3.0, 6.0 Gb/s (current: 3.0 Gb/s)
-Local Time is:    Sun Nov 19 10:47:26 2000 EST
+Local Time is:    Thu Nov 23 08:15:40 2000 EST
 SMART support is: Available - device has SMART capability.
 SMART support is: Enabled
-2024-01-17 08:41:34,169 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sdc | egrep '^\s*[0-9+]'"
-2024-01-17 08:41:34,439 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
+2024-01-21 06:09:40,609 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sdc | egrep '^\s*[0-9+]'"
+2024-01-21 06:09:40,879 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
   3 Spin_Up_Time                                                     POS--K   179   175   021    -    8033
-  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    133
+  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    135
   5 Reallocated_Sector_Ct                                            PO--CK   200   200   140    -    0
   7 Seek_Error_Rate                                                  -OSR-K   200   200   000    -    0
-  9 Power_On_Hours                                                   -O--CK   100   100   000    -    312
+  9 Power_On_Hours                                                   -O--CK   100   100   000    -    314
  10 Spin_Retry_Count                                                 -O--CK   100   100   000    -    0
  11 Calibration_Retry_Count                                          -O--CK   100   100   000    -    0
- 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    131
+ 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    133
 192 Power-Off_Retract_Count                                          -O--CK   200   200   000    -    0
-193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    134
-194 Temperature_Celsius                                              -O---K   111   110   000    -    41
+193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    136
+194 Temperature_Celsius                                              -O---K   115   110   000    -    37
 196 Reallocated_Event_Count                                          -O--CK   200   200   000    -    0
 197 Current_Pending_Sector                                           -O--CK   200   200   000    -    0
 198 Offline_Uncorrectable                                            ----CK   100   253   000    -    0
 199 UDMA_CRC_Error_Count                                             -O--CK   200   200   000    -    0
 200 Multi_Zone_Error_Rate                                            ---R--   100   253   000    -    0
-2024-01-17 08:41:34,440 INFO SEND > "smartctl --device sat --health /dev/sdd | grep ': '"
-2024-01-17 08:41:34,750 INFO REPLY > SMART overall-health self-assessment test result: PASSED
-2024-01-17 08:41:34,750 INFO SEND > "smartctl --device sat --info /dev/sdd | grep ': '"
-2024-01-17 08:41:34,979 INFO REPLY > Model Family:     Western Digital Red
+2024-01-21 06:09:40,879 INFO SEND > "smartctl --device sat --health /dev/sdd | grep ': '"
+2024-01-21 06:09:41,289 INFO REPLY > SMART overall-health self-assessment test result: PASSED
+2024-01-21 06:09:41,289 INFO SEND > "smartctl --device sat --info /dev/sdd | grep ': '"
+2024-01-21 06:09:41,518 INFO REPLY > Model Family:     Western Digital Red
 Device Model:     WDC WD40EFRX-68WT0N0
 Serial Number:    WD-WCC4E5UJ0HEF
 LU WWN Device Id: 5 0014ee 2b6388879
@@ -138,24 +138,27 @@ Rotation Rate:    5400 rpm
 Device is:        In smartctl database [for details use: -P show]
 ATA Version is:   ACS-2 (minor revision not indicated)
 SATA Version is:  SATA 3.0, 6.0 Gb/s (current: 3.0 Gb/s)
-Local Time is:    Sun Nov 19 10:47:27 2000 EST
+Local Time is:    Thu Nov 23 08:15:41 2000 EST
 SMART support is: Available - device has SMART capability.
 SMART support is: Enabled
-2024-01-17 08:41:34,979 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sdd | egrep '^\s*[0-9+]'"
-2024-01-17 08:41:35,249 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
-  3 Spin_Up_Time                                                     POS--K   178   175   021    -    8083
-  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    133
+2024-01-21 06:09:41,518 INFO SEND > "smartctl --device sat --attributes --format brief /dev/sdd | egrep '^\s*[0-9+]'"
+2024-01-21 06:09:41,789 INFO REPLY >   1 Raw_Read_Error_Rate                                              POSR-K   200   200   051    -    0
+  3 Spin_Up_Time                                                     POS--K   178   175   021    -    8100
+  4 Start_Stop_Count                                                 -O--CK   100   100   000    -    135
   5 Reallocated_Sector_Ct                                            PO--CK   200   200   140    -    0
   7 Seek_Error_Rate                                                  -OSR-K   200   200   000    -    0
-  9 Power_On_Hours                                                   -O--CK   100   100   000    -    312
+  9 Power_On_Hours                                                   -O--CK   100   100   000    -    314
  10 Spin_Retry_Count                                                 -O--CK   100   100   000    -    0
  11 Calibration_Retry_Count                                          -O--CK   100   100   000    -    0
- 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    131
+ 12 Power_Cycle_Count                                                -O--CK   100   100   000    -    133
 192 Power-Off_Retract_Count                                          -O--CK   200   200   000    -    0
-193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    134
-194 Temperature_Celsius                                              -O---K   113   110   000    -    39
+193 Load_Cycle_Count                                                 -O--CK   200   200   000    -    136
+194 Temperature_Celsius                                              -O---K   117   110   000    -    35
 196 Reallocated_Event_Count                                          -O--CK   200   200   000    -    0
 197 Current_Pending_Sector                                           -O--CK   200   200   000    -    0
 198 Offline_Uncorrectable                                            ----CK   100   253   000    -    0
 199 UDMA_CRC_Error_Count                                             -O--CK   200   200   000    -    0
 200 Multi_Zone_Error_Rate                                            ---R--   100   253   000    -    0
+2024-01-21 06:09:41,789 INFO SEND > "netstat -tn | grep :2049"
+2024-01-21 06:09:41,812 INFO REPLY > tcp        0     88 192.168.3.3:2049        192.168.3.1:677         ESTABLISHED
+tcp        0     88 192.168.3.3:2049        192.168.3.2:1019        ESTABLISHED

@@ -87,16 +87,16 @@ async def verify_ios(conn, logger):
     # Ensure the 4 infrastructure VLANs exist
     vlans = await _send_cmd_get_lod("show vlan")
     desired_vlans = {
-        4000: "experiment",
-        4001: "internet",
-        4002: "mgmt",
-        4003: "nas",
+        4000: "EXPERIMENT",
+        4001: "INTERNET",
+        4002: "MGMT",
+        4003: "NAS",
     }
-
     for vlan in vlans:
         vlid = int(vlan["vlan_id"])
         if vlid in desired_vlans:
-            assert desired_vlans.pop(vlid) == vlan["name"].lower()
+            assert vlan["name"] == desired_vlans.pop(vlid)
+            assert vlan["status"] == "active"
     assert len(desired_vlans) == 0
 
     # Ensure port VLAN, descriptions, speed, and duplex are correct
@@ -183,7 +183,15 @@ async def verify_esxi(conn, logger):
         logger.info('SEND > "%s"', cmd)
         resp = await conn.send_command(cmd)
         matrix = list(csv.reader(StringIO(resp.result)))
-        lod = [dict(zip(matrix[0], row)) for row in matrix[1:]]
+
+        # LC makes it harder to remove {"": ""} binding if the rows
+        # end in commas, which wastes memory and log space
+        # lod = [dict(zip(matrix[0], row)) for row in matrix[1:]]
+        lod = []
+        for row in matrix[1:]:
+            record = dict(zip(matrix[0], row))
+            record.pop("", None)
+            lod.append(record)
         logger.info("REPLY > %s", json.dumps(lod, indent=2))
         return lod
 
@@ -202,13 +210,13 @@ async def verify_esxi(conn, logger):
         assert vmk_det["NetstackInstance"] == "defaultTcpipStack"
         match vmk_det["Name"]:
             case "vmk0":
-                assert vmk_det["Portgroup"] == "Mgmt_PG"
-                assert vmk_det["Portset"] == "vSwitch0"
+                assert vmk_det["Portgroup"] == "Mgmt_VMK"
+                assert vmk_det["Portset"] == "Mgmt_vSwitch"  # was vSwitch0
             case "vmk1":
-                assert vmk_det["Portgroup"] == "Internet_PG"
+                assert vmk_det["Portgroup"] == "Internet_VMK"
                 assert vmk_det["Portset"] == "Internet_vSwitch"
             case "vmk2":
-                assert vmk_det["Portgroup"] == "Storage_PG"
+                assert vmk_det["Portgroup"] == "Storage_VMK"
                 assert vmk_det["Portset"] == "Storage_vSwitch"
             case _:
                 assert False
@@ -236,6 +244,28 @@ async def verify_esxi(conn, logger):
             case _:
                 assert False
 
+    # Ensure that the port groups are properly named, which is uniform
+    # for VMK and VM portgroups
+    pgs = await _send_cmd_get_lod("network vswitch standard portgroup list")
+    for pg in pgs:
+        assert pg["VirtualSwitch"].startswith(pg["Name"][: pg["Name"].find("_")])
+
+    # Exactly one VMK PG per vSwitch, always untagged (VLAN 0)
+    vmk_pgs = [pg for pg in pgs if pg["Name"].endswith("_VMK")]
+    assert len(vmk_pgs) == 3
+    for vmk_pg in vmk_pgs:
+        assert vmk_pg["ActiveClients"] == "1"
+        assert vmk_pg["VLANID"] == "0"
+
+    # At least one VM PG per vSwitch, access (VLAN 0) or trunk (VLAN 4095)
+    vm_pgs = [pg for pg in pgs if pg["Name"].endswith("_VM")]
+    assert len(vm_pgs) >= 4
+    for vm_pg in vm_pgs:
+        if "trunk" in vm_pg["Name"].lower():
+            assert vm_pg["VLANID"] == "4095"
+        else:
+            assert vm_pg["VLANID"] == "0"
+
     # Ensure all physical NICs are up and negotiated 1 Gbps/full duplex
     nics = await _send_cmd_get_lod("network nic list")
     assert len(nics) == 4
@@ -247,7 +277,7 @@ async def verify_esxi(conn, logger):
 
     # Ensure that the 4 vSwitches are maped to the 4 physical NICs correctly.
     vmnic_vswitch_map = {
-        0: "vSwitch0",
+        0: "Mgmt_vSwitch",  # was vSwitch0
         1: "Storage_vSwitch",
         2: "Prod_vSwitch",
         3: "Internet_vSwitch",
@@ -277,6 +307,31 @@ async def verify_esxi(conn, logger):
         assert vmfs_vol["Mounted"] == "true"
         if "VMFS" in vmfs_vol["Type"]:
             assert vmfs_vol["VolumeName"].startswith("ESXi")
+
+    # Ensure host firewall has enabled/disabled certain services
+    fw_svc_map = {
+        "sshServer": "true",
+        "nfsClient": "true",
+        "ftpClient": "true",
+        "remoteSerialPort": "true",
+        "webAccess": "true",
+        "vSphereClient": "true",
+        "WOL": "true",
+        "sshClient": "false",
+        "vMotion": "false",
+        "vSPC": "false",
+        "updateManager": "false",
+        "esxupdate": "false",
+        "vpxHeartbeats": "false",
+        "DVSSync": "false",
+        "faultTolerance": "false",
+        "activeDirectoryAll": "false",
+    }
+    fw_rules = await _send_cmd_get_lod("network firewall ruleset list")
+    for fw_rule in fw_rules:
+        if fw_rule["Name"] in fw_svc_map:
+            assert fw_rule["Enabled"] == fw_svc_map.pop(fw_rule["Name"])
+    assert len(fw_svc_map) == 0
 
 
 async def verify_syno(conn, logger):

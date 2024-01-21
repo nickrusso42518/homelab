@@ -26,6 +26,9 @@ without any problems as only SSH/CLI is used; no modern API interactions.
 First, install the required Python packages. I'd recommend using Python 3.10
 or newer, but Python 3.7 will likely also work: `pip install -r requirements.txt`
 
+You can also use `pip install -r requirements.freeze.txt` to exactly
+match my versions, but you may miss out on package updates.
+
 This is a "some assembly required" project. Next, create `config.json` and
 populate it with your connectivity parameters. An example is included in the
 `samples/` directory. This project assumes that all of your lab devices share

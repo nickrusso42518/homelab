@@ -1,17 +1,17 @@
-2024-01-17 08:41:32,457 INFO SEND > "show version"
-2024-01-17 08:41:32,750 INFO REPLY > [
+2024-01-21 06:09:40,979 INFO SEND > "show version"
+2024-01-21 06:09:41,287 INFO REPLY > [
   {
     "software_image": "C3750E-UNIVERSALK9-M",
     "version": "15.2(4)E10",
     "release": "fc2",
     "rommon": "Bootstrap",
     "hostname": "C3750X",
-    "uptime": "1 hour, 46 minutes",
+    "uptime": "1 hour, 8 minutes",
     "uptime_years": "",
     "uptime_weeks": "",
     "uptime_days": "",
     "uptime_hours": "1",
-    "uptime_minutes": "46",
+    "uptime_minutes": "8",
     "reload_reason": "power-on",
     "running_image": "c3750e-universalk9-mz.152-4.E10.bin",
     "hardware": [
@@ -27,8 +27,8 @@
     "restarted": ""
   }
 ]
-2024-01-17 08:41:32,750 INFO SEND > "show vlan"
-2024-01-17 08:41:32,820 INFO REPLY > [
+2024-01-21 06:09:41,287 INFO SEND > "show vlan"
+2024-01-21 06:09:41,366 INFO REPLY > [
   {
     "vlan_id": "1",
     "name": "default",
@@ -110,8 +110,8 @@
     ]
   }
 ]
-2024-01-17 08:41:32,820 INFO SEND > "show interfaces status"
-2024-01-17 08:41:32,892 INFO REPLY > [
+2024-01-21 06:09:41,367 INFO SEND > "show interfaces status"
+2024-01-21 06:09:41,432 INFO REPLY > [
   {
     "port": "Gi1/0/1",
     "name": "MGMT - ESXI1 NIC0",
@@ -363,8 +363,8 @@
     "fc_mode": ""
   }
 ]
-2024-01-17 08:41:32,892 INFO SEND > "show cdp neighbors"
-2024-01-17 08:41:32,949 INFO REPLY > [
+2024-01-21 06:09:41,433 INFO SEND > "show cdp neighbors"
+2024-01-21 06:09:41,484 INFO REPLY > [
   {
     "neighbor": "esxi1.fios-router.home",
     "local_interface": "Gig 1/0/19",
@@ -422,8 +422,8 @@
     "neighbor_interface": "ES vmnic0"
   }
 ]
-2024-01-17 08:41:32,949 INFO SEND > "show ip interface brief | exclude unassigned"
-2024-01-17 08:41:33,046 INFO REPLY > [
+2024-01-21 06:09:41,484 INFO SEND > "show ip interface brief | exclude unassigned"
+2024-01-21 06:09:41,585 INFO REPLY > [
   {
     "intf": "Vlan4001",
     "ipaddr": "192.168.1.254",
@@ -443,8 +443,8 @@
     "proto": "up"
   }
 ]
-2024-01-17 08:41:33,046 INFO SEND > "show ip route"
-2024-01-17 08:41:33,094 INFO REPLY > [
+2024-01-21 06:09:41,585 INFO SEND > "show ip route"
+2024-01-21 06:09:41,636 INFO REPLY > [
   {
     "vrf": "",
     "protocol": "S",

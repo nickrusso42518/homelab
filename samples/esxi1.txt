@@ -1,16 +1,15 @@
-2024-01-17 08:41:30,879 INFO SEND > "esxcli --formatter=csv system version get"
-2024-01-17 08:41:31,377 INFO REPLY > [
+2024-01-21 06:09:37,373 INFO SEND > "esxcli --formatter=csv system version get"
+2024-01-21 06:09:37,866 INFO REPLY > [
   {
     "Build": "Releasebuild-3620759",
     "Patch": "34",
     "Product": "VMware ESXi",
     "Update": "2",
-    "Version": "6.0.0",
-    "": ""
+    "Version": "6.0.0"
   }
 ]
-2024-01-17 08:41:31,378 INFO SEND > "esxcli --formatter=csv network ip interface list"
-2024-01-17 08:41:31,929 INFO REPLY > [
+2024-01-21 06:09:37,867 INFO SEND > "esxcli --formatter=csv network ip interface list"
+2024-01-21 06:09:38,426 INFO REPLY > [
   {
     "Enabled": "true",
     "ExternalID": "N/A",
@@ -21,14 +20,13 @@
     "OpaqueNetworkID": "N/A",
     "OpaqueNetworkType": "N/A",
     "PortID": "33554436",
-    "Portgroup": "Mgmt_PG",
-    "Portset": "vSwitch0",
+    "Portgroup": "Mgmt_VMK",
+    "Portset": "Mgmt_vSwitch",
     "TSOMSS": "65535",
     "VDSConnection": "-1",
     "VDSName": "N/A",
     "VDSPort": "N/A",
-    "VDSUUID": "N/A",
-    "": ""
+    "VDSUUID": "N/A"
   },
   {
     "Enabled": "true",
@@ -40,14 +38,13 @@
     "OpaqueNetworkID": "N/A",
     "OpaqueNetworkType": "N/A",
     "PortID": "83886084",
-    "Portgroup": "Internet_PG",
+    "Portgroup": "Internet_VMK",
     "Portset": "Internet_vSwitch",
     "TSOMSS": "65535",
     "VDSConnection": "-1",
     "VDSName": "N/A",
     "VDSPort": "N/A",
-    "VDSUUID": "N/A",
-    "": ""
+    "VDSUUID": "N/A"
   },
   {
     "Enabled": "true",
@@ -59,26 +56,24 @@
     "OpaqueNetworkID": "N/A",
     "OpaqueNetworkType": "N/A",
     "PortID": "50331652",
-    "Portgroup": "Storage_PG",
+    "Portgroup": "Storage_VMK",
     "Portset": "Storage_vSwitch",
     "TSOMSS": "65535",
     "VDSConnection": "-1",
     "VDSName": "N/A",
     "VDSPort": "N/A",
-    "VDSUUID": "N/A",
-    "": ""
+    "VDSUUID": "N/A"
   }
 ]
-2024-01-17 08:41:31,929 INFO SEND > "esxcli --formatter=csv network ip interface ipv4 get"
-2024-01-17 08:41:32,437 INFO REPLY > [
+2024-01-21 06:09:38,426 INFO SEND > "esxcli --formatter=csv network ip interface ipv4 get"
+2024-01-21 06:09:38,932 INFO REPLY > [
   {
     "AddressType": "STATIC",
     "DHCPDNS": "false",
     "IPv4Address": "192.168.2.1",
     "IPv4Broadcast": "192.168.2.255",
     "IPv4Netmask": "255.255.255.0",
-    "Name": "vmk0",
-    "": ""
+    "Name": "vmk0"
   },
   {
     "AddressType": "DHCP",
@@ -86,8 +81,7 @@
     "IPv4Address": "169.254.166.89",
     "IPv4Broadcast": "169.254.255.255",
     "IPv4Netmask": "255.255.0.0",
-    "Name": "vmk1",
-    "": ""
+    "Name": "vmk1"
   },
   {
     "AddressType": "STATIC",
@@ -95,12 +89,56 @@
     "IPv4Address": "192.168.3.1",
     "IPv4Broadcast": "192.168.3.255",
     "IPv4Netmask": "255.255.255.0",
-    "Name": "vmk2",
-    "": ""
+    "Name": "vmk2"
   }
 ]
-2024-01-17 08:41:32,438 INFO SEND > "esxcli --formatter=csv network nic list"
-2024-01-17 08:41:33,050 INFO REPLY > [
+2024-01-21 06:09:38,933 INFO SEND > "esxcli --formatter=csv network vswitch standard portgroup list"
+2024-01-21 06:09:39,466 INFO REPLY > [
+  {
+    "ActiveClients": "0",
+    "Name": "Internet_Access_VM",
+    "VLANID": "0",
+    "VirtualSwitch": "Internet_vSwitch"
+  },
+  {
+    "ActiveClients": "1",
+    "Name": "Internet_VMK",
+    "VLANID": "0",
+    "VirtualSwitch": "Internet_vSwitch"
+  },
+  {
+    "ActiveClients": "0",
+    "Name": "Mgmt_Access_VM",
+    "VLANID": "0",
+    "VirtualSwitch": "Mgmt_vSwitch"
+  },
+  {
+    "ActiveClients": "1",
+    "Name": "Mgmt_VMK",
+    "VLANID": "0",
+    "VirtualSwitch": "Mgmt_vSwitch"
+  },
+  {
+    "ActiveClients": "0",
+    "Name": "Prod_Trunk_VM",
+    "VLANID": "4095",
+    "VirtualSwitch": "Prod_vSwitch"
+  },
+  {
+    "ActiveClients": "0",
+    "Name": "Storage_Access_VM",
+    "VLANID": "0",
+    "VirtualSwitch": "Storage_vSwitch"
+  },
+  {
+    "ActiveClients": "1",
+    "Name": "Storage_VMK",
+    "VLANID": "0",
+    "VirtualSwitch": "Storage_vSwitch"
+  }
+]
+2024-01-21 06:09:39,466 INFO SEND > "esxcli --formatter=csv network nic list"
+2024-01-21 06:09:40,071 INFO REPLY > [
   {
     "AdminStatus": "Up",
     "Description": "Intel Corporation 82573L Gigabit Ethernet Controller",
@@ -112,8 +150,7 @@
     "MTU": "1500",
     "Name": "vmnic0",
     "PCIDevice": "0000:04:00.0",
-    "Speed": "1000",
-    "": ""
+    "Speed": "1000"
   },
   {
     "AdminStatus": "Up",
@@ -126,8 +163,7 @@
     "MTU": "1500",
     "Name": "vmnic1",
     "PCIDevice": "0000:05:00.0",
-    "Speed": "1000",
-    "": ""
+    "Speed": "1000"
   },
   {
     "AdminStatus": "Up",
@@ -140,8 +176,7 @@
     "MTU": "1500",
     "Name": "vmnic2",
     "PCIDevice": "0000:02:00.0",
-    "Speed": "1000",
-    "": ""
+    "Speed": "1000"
   },
   {
     "AdminStatus": "Up",
@@ -154,12 +189,11 @@
     "MTU": "1500",
     "Name": "vmnic3",
     "PCIDevice": "0000:02:00.1",
-    "Speed": "1000",
-    "": ""
+    "Speed": "1000"
   }
 ]
-2024-01-17 08:41:33,051 INFO SEND > "esxcli --formatter=csv network vswitch standard list"
-2024-01-17 08:41:33,627 INFO REPLY > [
+2024-01-21 06:09:40,071 INFO SEND > "esxcli --formatter=csv network vswitch standard list"
+2024-01-21 06:09:40,646 INFO REPLY > [
   {
     "BeaconEnabled": "false",
     "BeaconInterval": "1",
@@ -169,12 +203,11 @@
     "Class": "etherswitch",
     "ConfiguredPorts": "128",
     "MTU": "1500",
-    "Name": "vSwitch0",
+    "Name": "Mgmt_vSwitch",
     "NumPorts": "1752",
-    "Portgroups": "Mgmt_PG,",
+    "Portgroups": "Mgmt_Access_VM,Mgmt_VMK,",
     "Uplinks": "vmnic0,",
-    "UsedPorts": "4",
-    "": ""
+    "UsedPorts": "4"
   },
   {
     "BeaconEnabled": "false",
@@ -187,10 +220,9 @@
     "MTU": "1500",
     "Name": "Storage_vSwitch",
     "NumPorts": "1752",
-    "Portgroups": "Storage_PG,",
+    "Portgroups": "Storage_Access_VM,Storage_VMK,",
     "Uplinks": "vmnic1,",
-    "UsedPorts": "4",
-    "": ""
+    "UsedPorts": "4"
   },
   {
     "BeaconEnabled": "false",
@@ -203,10 +235,9 @@
     "MTU": "1500",
     "Name": "Prod_vSwitch",
     "NumPorts": "1752",
-    "Portgroups": "",
+    "Portgroups": "Prod_Trunk_VM,",
     "Uplinks": "vmnic2,",
-    "UsedPorts": "3",
-    "": ""
+    "UsedPorts": "3"
   },
   {
     "BeaconEnabled": "false",
@@ -219,14 +250,13 @@
     "MTU": "1500",
     "Name": "Internet_vSwitch",
     "NumPorts": "1752",
-    "Portgroups": "Internet_PG,",
+    "Portgroups": "Internet_Access_VM,Internet_VMK,",
     "Uplinks": "vmnic3,",
-    "UsedPorts": "4",
-    "": ""
+    "UsedPorts": "4"
   }
 ]
-2024-01-17 08:41:33,627 INFO SEND > "esxcli --formatter=csv storage nfs list"
-2024-01-17 08:41:34,152 INFO REPLY > [
+2024-01-21 06:09:40,646 INFO SEND > "esxcli --formatter=csv storage nfs list"
+2024-01-21 06:09:41,289 INFO REPLY > [
   {
     "Accessible": "true",
     "HardwareAcceleration": "Not Supported",
@@ -235,12 +265,11 @@
     "ReadOnly": "false",
     "Share": "/volume1/vsphere_nfs",
     "VolumeName": "vSphere_NFS3",
-    "isPE": "false",
-    "": ""
+    "isPE": "false"
   }
 ]
-2024-01-17 08:41:34,153 INFO SEND > "esxcli --formatter=csv storage filesystem list | egrep '(Free|_)'"
-2024-01-17 08:41:34,892 INFO REPLY > [
+2024-01-21 06:09:41,289 INFO SEND > "esxcli --formatter=csv storage filesystem list | egrep '(Free|_)'"
+2024-01-21 06:09:42,045 INFO REPLY > [
   {
     "Free": "10673594023936",
     "MountPoint": "/vmfs/volumes/aa33dd10-b62c1a93",
@@ -248,28 +277,7 @@
     "Size": "11893093441536",
     "Type": "NFS",
     "UUID": "aa33dd10-b62c1a93",
-    "VolumeName": "vSphere_NFS3",
-    "": ""
-  },
-  {
-    "Free": "490190405632",
-    "MountPoint": "/vmfs/volumes/54ac6d0a-a8ac6b8f-09ad-a0369f34e9e0",
-    "Mounted": "true",
-    "Size": "511906414592",
-    "Type": "VMFS-5",
-    "UUID": "54ac6d0a-a8ac6b8f-09ad-a0369f34e9e0",
-    "VolumeName": "ESXi1_SSD",
-    "": ""
-  },
-  {
-    "Free": "239766339584",
-    "MountPoint": "/vmfs/volumes/541ece64-bed634b5-8da2-a0369f34e9e0",
-    "Mounted": "true",
-    "Size": "241860345856",
-    "Type": "VMFS-5",
-    "UUID": "541ece64-bed634b5-8da2-a0369f34e9e0",
-    "VolumeName": "ESXi1_HDD",
-    "": ""
+    "VolumeName": "vSphere_NFS3"
   },
   {
     "Free": "22200451072",
@@ -278,7 +286,199 @@
     "Size": "23890755584",
     "Type": "VMFS-5",
     "UUID": "65a68296-5b60fe73-27ab-a0369f34e9e0",
-    "VolumeName": "ESXi1_temp",
-    "": ""
+    "VolumeName": "ESXi1_temp"
+  },
+  {
+    "Free": "490190405632",
+    "MountPoint": "/vmfs/volumes/54ac6d0a-a8ac6b8f-09ad-a0369f34e9e0",
+    "Mounted": "true",
+    "Size": "511906414592",
+    "Type": "VMFS-5",
+    "UUID": "54ac6d0a-a8ac6b8f-09ad-a0369f34e9e0",
+    "VolumeName": "ESXi1_SSD"
+  },
+  {
+    "Free": "239765291008",
+    "MountPoint": "/vmfs/volumes/541ece64-bed634b5-8da2-a0369f34e9e0",
+    "Mounted": "true",
+    "Size": "241860345856",
+    "Type": "VMFS-5",
+    "UUID": "541ece64-bed634b5-8da2-a0369f34e9e0",
+    "VolumeName": "ESXi1_HDD"
+  }
+]
+2024-01-21 06:09:42,046 INFO SEND > "esxcli --formatter=csv network firewall ruleset list"
+2024-01-21 06:09:42,569 INFO REPLY > [
+  {
+    "Enabled": "true",
+    "Name": "sshServer"
+  },
+  {
+    "Enabled": "false",
+    "Name": "sshClient"
+  },
+  {
+    "Enabled": "true",
+    "Name": "nfsClient"
+  },
+  {
+    "Enabled": "false",
+    "Name": "nfs41Client"
+  },
+  {
+    "Enabled": "true",
+    "Name": "dhcp"
+  },
+  {
+    "Enabled": "true",
+    "Name": "dns"
+  },
+  {
+    "Enabled": "true",
+    "Name": "snmp"
+  },
+  {
+    "Enabled": "false",
+    "Name": "ntpClient"
+  },
+  {
+    "Enabled": "true",
+    "Name": "CIMHttpServer"
+  },
+  {
+    "Enabled": "true",
+    "Name": "CIMHttpsServer"
+  },
+  {
+    "Enabled": "true",
+    "Name": "CIMSLP"
+  },
+  {
+    "Enabled": "false",
+    "Name": "iSCSI"
+  },
+  {
+    "Enabled": "false",
+    "Name": "vpxHeartbeats"
+  },
+  {
+    "Enabled": "false",
+    "Name": "updateManager"
+  },
+  {
+    "Enabled": "false",
+    "Name": "faultTolerance"
+  },
+  {
+    "Enabled": "true",
+    "Name": "webAccess"
+  },
+  {
+    "Enabled": "false",
+    "Name": "vMotion"
+  },
+  {
+    "Enabled": "true",
+    "Name": "vSphereClient"
+  },
+  {
+    "Enabled": "false",
+    "Name": "activeDirectoryAll"
+  },
+  {
+    "Enabled": "true",
+    "Name": "NFC"
+  },
+  {
+    "Enabled": "true",
+    "Name": "HBR"
+  },
+  {
+    "Enabled": "true",
+    "Name": "ftpClient"
+  },
+  {
+    "Enabled": "false",
+    "Name": "httpClient"
+  },
+  {
+    "Enabled": "false",
+    "Name": "gdbserver"
+  },
+  {
+    "Enabled": "false",
+    "Name": "DVFilter"
+  },
+  {
+    "Enabled": "false",
+    "Name": "DHCPv6"
+  },
+  {
+    "Enabled": "false",
+    "Name": "DVSSync"
+  },
+  {
+    "Enabled": "false",
+    "Name": "syslog"
+  },
+  {
+    "Enabled": "false",
+    "Name": "IKED"
+  },
+  {
+    "Enabled": "true",
+    "Name": "WOL"
+  },
+  {
+    "Enabled": "false",
+    "Name": "vSPC"
+  },
+  {
+    "Enabled": "true",
+    "Name": "remoteSerialPort"
+  },
+  {
+    "Enabled": "false",
+    "Name": "vprobeServer"
+  },
+  {
+    "Enabled": "false",
+    "Name": "rdt"
+  },
+  {
+    "Enabled": "false",
+    "Name": "cmmds"
+  },
+  {
+    "Enabled": "true",
+    "Name": "vsanvp"
+  },
+  {
+    "Enabled": "true",
+    "Name": "rabbitmqproxy"
+  },
+  {
+    "Enabled": "false",
+    "Name": "ipfam"
+  },
+  {
+    "Enabled": "false",
+    "Name": "vvold"
+  },
+  {
+    "Enabled": "false",
+    "Name": "iofiltervp"
+  },
+  {
+    "Enabled": "false",
+    "Name": "esxupdate"
+  },
+  {
+    "Enabled": "false",
+    "Name": "vit"
+  },
+  {
+    "Enabled": "false",
+    "Name": "vsanhealth-multicasttest"
   }
 ]
